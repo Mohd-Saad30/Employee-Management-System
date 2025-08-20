@@ -1,21 +1,19 @@
 import React, { useState } from "react";
 import { AuthStore } from "../../Context/AuthContext";
 
-export const LoginPage = ({handleLogin}) => {
+export const LoginPage = ({ handleLogin }) => {
   const [email, setEmail] = useState("");
 
-
   const [password, setPassword] = useState("");
-  const login = AuthStore((state)=>state.login)
+  const login = AuthStore((state) => state.login);
   const submitHandler = (e) => {
     e.preventDefault();
-  
 
-    const successful_login =login(email,password)
-    if(!successful_login){
+    const successful_login = login(email, password);
+    if (!successful_login) {
       alert("Invalid credentials. Please try again.");
     }
-    
+
     setEmail("");
     setPassword("");
   };

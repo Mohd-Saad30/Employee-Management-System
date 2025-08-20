@@ -1,4 +1,4 @@
-import AllTask from "../others/AllTask";
+import EmployeeTaskDetails from "../others/EmployeeTaskDetails";
 import CreateTask from "../others/CreateTask";
 import Header from "../others/Header";
 
@@ -7,7 +7,7 @@ function AdminDashboard() {
     <div className="h-screen w-full p-10 bg-gray-50">
       <Header />
       <CreateTask />
-      <AllTask />
+      <EmployeeTaskDetails />
     </div>
   );
 }

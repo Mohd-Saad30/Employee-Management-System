@@ -1,9 +1,9 @@
 import { useState } from "react"
-import { AuthStore } from "../../Context/AuthContext"
+import {Store } from "../../Context/Context"
 
 
 function CreateTask() {
-    const addTask=AuthStore(state=>state.addTask)
+    const addTask=Store(state=>state.addTask)
     const [TaskTitle, setTaskTitle] = useState('')
     const [taskDate, setTaskDate] = useState('')
     const [Assignee, setAssignee] = useState('')

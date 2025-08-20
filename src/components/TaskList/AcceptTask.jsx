@@ -1,9 +1,9 @@
-import { AuthStore } from "../../Context/AuthContext";
+import {Store } from "../../Context/Context";
 
 function AcceptTask({ task }) {
-  const completedTask = AuthStore((state) => state.completedTask);
+  const completedTask =Store((state) => state.completedTask);
 
-  const FailedTask = AuthStore((state) => state.failedTask);
+  const FailedTask =Store((state) => state.failedTask);
   return (
     <div className="flex flex-col shrink-0 h-[220px] w-[340px] bg-white/95 rounded-3xl p-7 border border-blue-100 ">
       <div className="flex justify-between items-center mb-3">

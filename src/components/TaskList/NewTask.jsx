@@ -1,7 +1,7 @@
-import { AuthStore } from "../../Context/AuthContext";
+import {Store } from "../../Context/Context";
 
 function NewTask({ task }) {
-  const acceptTask = AuthStore((state) => state.acceptTask);
+  const acceptTask =Store((state) => state.acceptTask);
   const clickFunction = () => {
     acceptTask(task);
   };

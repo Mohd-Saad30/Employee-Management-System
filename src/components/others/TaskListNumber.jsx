@@ -1,7 +1,7 @@
-import { AuthStore } from "../../Context/AuthContext"
+import {Store } from "../../Context/Context"
 
 function TaskListNumber() {
-  const currentUser = AuthStore((state)=>state.user)
+  const currentUser =Store((state)=>state.user)
     return (
         <div className='flex mt-10 justify-between gap-7 screen flex-wrap md:flex-nowrap'>
             <div className='rounded-xl w-[40%] py-6 px-9 bg-blue-400 h-40 flex flex-col items-center justify-center'>

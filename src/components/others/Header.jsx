@@ -1,8 +1,8 @@
-import { AuthStore } from "../../Context/AuthContext"
+import {Store } from "../../Context/Context"
 
 function Header() {
-    const logout = AuthStore((state)=>state.logout)
-    const currentUser = AuthStore((state)=>state.user)
+    const logout =Store((state)=>state.logout)
+    const currentUser =Store((state)=>state.user)
     const name= currentUser.role=='admin'?'ADMIN' : currentUser.firstName;
 return (
     <header className="flex items-center justify-between bg-gradient-to-r from-blue-500 to-blue-700 p-6  rounded-b-xl">

@@ -211,7 +211,7 @@ const adminData = [
   },
 ];
 
-export const AuthStore = create(
+export const Store = create(
   persist(
     (set, get) => ({
       employeesData: employeesData,

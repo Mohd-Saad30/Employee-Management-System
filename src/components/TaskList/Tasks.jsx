@@ -2,10 +2,10 @@ import AcceptTask from "./AcceptTask";
 import CompleteTask from "./CompleteTask";
 import FailedTask from "./FailedTask";
 import NewTask from "./NewTask";
-import { AuthStore } from "../../Context/AuthContext";
+import {Store } from "../../Context/Context";
 
 function Tasks() {
-const currentUser=  AuthStore((state)=>state.user)
+const currentUser= Store((state)=>state.user)
   return (
     <div
       id="TaskDiv"

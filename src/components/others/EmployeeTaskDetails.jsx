@@ -1,7 +1,7 @@
-import { AuthStore } from '../../Context/AuthContext';
+import {Store } from '../../Context/Context';
 
-function AllTask() {
-  const employeesData = AuthStore((state) => state.employeesData);
+function EmployeeTaskDetails() {
+  const employeesData =Store((state) => state.employeesData);
 
 
   return (
@@ -31,4 +31,4 @@ function AllTask() {
   );
 }
 
-export default AllTask;
+export default EmployeeTaskDetails;

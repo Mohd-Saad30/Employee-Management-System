@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { AuthStore } from "../../Context/AuthContext";
+import {Store } from "../../Context/Context";
 
 export const LoginPage = ({ handleLogin }) => {
   const [email, setEmail] = useState("");
 
   const [password, setPassword] = useState("");
-  const login = AuthStore((state) => state.login);
+  const login =Store((state) => state.login);
   const submitHandler = (e) => {
     e.preventDefault();
 

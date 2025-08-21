@@ -236,18 +236,35 @@ export const Store = create(
         return false;
       },
       logout: () => set({ user: null }),
-      addEmployee: (newEmployee) =>
+ 
+         addEmployee: (employeeName) => {
+        const { employeesData } = get(); // Get current state
+        const exists = employeesData.find(
+          (employee) => employee.firstName.toLowerCase() === employeeName.toLowerCase()
+        );
+        
+        if (exists) {
+          return false; // Employee exists, return false immediately.
+        }
+        
+        // If employee doesn't exist, update the state.
         set((state) => ({
           employeesData: [
             ...state.employeesData,
             {
-              ...newEmployee,
               id: Date.now(),
+              firstName: employeeName,
+              email: `${employeeName.toLowerCase()}@example.com`,
+              password: "123",
               taskCounts: { active: 0, newTask: 0, completed: 0, failed: 0 },
               tasks: [],
             },
           ],
-        })),
+        }));
+        
+        return true; // Return true to indicate success.
+      },
+
       acceptTask: (task) =>
         set((state) => ({
           user: {

@@ -18,8 +18,14 @@ export const LoginPage = ({ handleLogin }) => {
     setPassword("");
   };
   return (
-    <div className="flex justify-center items-center h-screen ">
-      <div className="border-2 rounded-xl border-emerald-600 p-20">
+    <div className="flex  flex-col items-center  h-screen bg-blue-100 ">
+      <header className="w-full flex items-center bg-gradient-to-r from-blue-500 to-blue-700 p-6  rounded-b-xl justify-center">
+        <h1 className="text-white text-3xl font-bold">
+          Employee Management System
+        </h1>
+      </header>
+
+      <div className="mt-auto border-2 rounded-xl border-emerald-600 transition duration-150 p-20 bg-white">
         <form
           className="flex items-center justify-center flex-col"
           onSubmit={submitHandler}
@@ -49,6 +55,11 @@ export const LoginPage = ({ handleLogin }) => {
           </button>
         </form>
       </div>
+      <footer className="mt-auto   w-full flex items-center bg-gradient-to-r from-blue-500 to-blue-700 p-6  rounded-b-xl justify-center h-auto">
+        <h1 className="text-white text-3xl font-bold">
+          Developed by Mohd Saad
+        </h1>
+      </footer>
     </div>
   );
 };

@@ -14,4 +14,8 @@ The system has two distinct user roles: **Admin and Employee.**
 
 -**Tailwind CSS**: A utility-first CSS framework for rapidly building custom designs.
 
+##**Credentials**
+You can explore both roles with the following credentials. The password for all users is 123.
+Admin Email: admin@example.com
+Employee Email: employee1@example.com 
 

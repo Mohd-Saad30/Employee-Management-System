@@ -17,7 +17,8 @@ function AddEmployee() {
         const success = addEmployee(employeeName);
         if (success) {
             setMessage(`Employee '${employeeName}' was added successfully!
-                Email id: ${employeeName.toLowerCase()}@example.com`);
+                Email id: ${employeeName.toLowerCase()}@example.com
+                Password : 123`);
         } else {
             setMessage(`An employee named '${employeeName}' already exists.`);
         }
@@ -26,11 +27,12 @@ function AddEmployee() {
     
     
     if (message) {
-        setTimeout(() => setMessage(""), 7000);
+        setTimeout(() => setMessage(""), 10000);
     }
 
     return (
-        <div className="p-4 bg-gray-50 rounded-lg  mx-auto mt-10 ">
+        <div className="p-5 bg-white rounded-lg  mx-auto mt-10 ">
+            <h2 className="text-2xl font-bold mb-6 text-gray-800">Create New Employee</h2>
             <div className="flex items-end gap-4">
                 <div className="flex-1">
                     <label

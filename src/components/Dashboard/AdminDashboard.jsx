@@ -7,8 +7,8 @@ function AdminDashboard() {
   return (
     <div className="h-screen w-full p-10 bg-gray-50">
       <Header />
-      <CreateTask />
       <AddEmployee/>
+      <CreateTask />
       <EmployeeTaskDetails />
     </div>
   );

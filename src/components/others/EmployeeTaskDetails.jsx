@@ -17,7 +17,7 @@ function EmployeeTaskDetails() {
       {employeesData.map((employee, idx) => (
         <div
           key={idx}
-          className="bg-gray-400 hover:bg-red-300 transition mb-2 py-2 px-6 flex justify-between items-center rounded"
+          className="bg-blue-100 hover:bg-red-300 transition mb-2 py-2 px-6 flex justify-between items-center rounded"
         > 
           <h5 className="text-lg w-19 text-center font-bold">{idx + 1}</h5>
           <h2 className="text-lg w-1/5 font-medium">{employee.firstName}</h2>

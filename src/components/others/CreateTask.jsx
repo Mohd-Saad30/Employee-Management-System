@@ -34,11 +34,11 @@ function CreateTask() {
     <div className="mt-10 bg-white p-8 rounded-lg shadow-md">
       <h2 className="text-2xl font-bold mb-6 text-gray-800">Create New Task</h2>
       <form
-        className="w-[90%] flex justify-between gap-15 p-10"
+        className="w-[100%] flex flex-wrap sm:flex-nowrap justify-between gap-15 p-10 sm:w-[90%]"
         onSubmit={submitHandler}
       >
-        <div className="flex flex-col gap-4 w-1/2">
-          <div>
+        <div className="w-[100%] sm:flex flex-col gap-4 sm:w-1/2">
+          <div >
             <label
               htmlFor="TaskTitle"
               className="block text-sm font-medium text-gray-700 mb-1"
@@ -124,7 +124,7 @@ function CreateTask() {
           </div>
         </div>
 
-        <div className="flex flex-col gap-4 w-1/2">
+        <div className="w-full flex flex-col gap-4 sm:w-1/2">
           <div>
             <label
               htmlFor="Description"

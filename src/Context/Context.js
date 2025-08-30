@@ -82,15 +82,27 @@ export const Store = create(
       },
       logout: () => set({ user: null }),
 
-      addEmployee: (employeeName) => {
+      addEmployee: (employeeName, employeeEmail, employeePassword) => {
         const { employeesData } = get();
-        const exists = employeesData.find(
+        const existName = employeesData.find(
           (employee) =>
             employee.firstName.toLowerCase() === employeeName.toLowerCase()
         );
-
-        if (exists) {
-          return false;
+        if (existName) {
+          return {
+            success: false,
+            message: `An employee named '${employeeName}' already exists.`,
+          };
+        }
+        const existEmail = employeesData.find(
+          (employee) =>
+            employee.email.toLowerCase() === employeeEmail.toLowerCase()
+        );
+        if (existEmail) {
+          return {
+            success: false,
+            message: `An employee email '${employeeEmail}' already exists.`,
+          };
         }
 
         set((state) => ({
@@ -99,15 +111,18 @@ export const Store = create(
             {
               id: Date.now(),
               firstName: employeeName,
-              email: `${employeeName.toLowerCase()}@example.com`,
-              password: "123",
+              email: employeeEmail,
+              password: employeePassword,
               taskCounts: { active: 0, newTask: 0, completed: 0, failed: 0 },
               tasks: [],
             },
           ],
         }));
 
-        return true;
+        return {
+          success: true,
+          message: `Employee '${employeeName}' was added successfully!`,
+        };
       },
 
       acceptTask: (task) =>

@@ -62,21 +62,28 @@ export const Store = create(
       employeesData: employeesData,
       adminData: adminData,
       user: null,
-      login: (email, password) => {
+      login: (email, password, role) => {
         const { adminData, employeesData } = get();
-        const adminUser = adminData.find(
-          (admin) => admin.email == email && admin.password == password
-        );
-        if (adminUser) {
-          set({ user: { role: "admin", ...adminUser } });
-          return true;
-        }
-        const employeeUser = employeesData.find(
-          (employee) => employee.email == email && employee.password == password
-        );
-        if (employeeUser) {
-          set({ user: { role: "employee", ...employeeUser } });
-          return true;
+        if (role === "admin")
+        {
+          const adminUser = adminData.find(
+            (admin) => admin.email == email && admin.password == password
+          );
+          if (adminUser) {
+            set({ user: { role: "admin", ...adminUser } });
+            return true;
+          }
+        } 
+        else if (role === "employee")
+        {
+          const employeeUser = employeesData.find(
+            (employee) =>
+              employee.email == email && employee.password == password
+          );
+          if (employeeUser) {
+            set({ user: { role: "employee", ...employeeUser } });
+            return true;
+          }
         }
         return false;
       },

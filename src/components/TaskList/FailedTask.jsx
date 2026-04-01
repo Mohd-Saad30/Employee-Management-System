@@ -9,7 +9,7 @@ function FailedTask({ task }) {
           {task.taskDate}
         </span>
       </div>
-      <h2 className="text-2xl font-bold text-blue-700 mb-2">
+      <h2 className="text-xl font-bold text-blue-700 mb-2">
         {task.taskTitle}
       </h2>
       <p className="text-gray-700 text-sm ">{task.taskDescription}</p>

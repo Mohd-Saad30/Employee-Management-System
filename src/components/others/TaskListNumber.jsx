@@ -1,27 +1,89 @@
-import {Store } from "../../Context/Context"
+import { useEffect, useState } from "react";
+import { Store } from "../../Context/Context";
+
+const Counter = ({ targetValue }) => {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    if (!targetValue || targetValue === 0) {
+      setCount(0);
+      return;
+    }
+
+    let start = 0;
+    const end = parseInt(targetValue);
+    const duration = 1000;
+    const increment = end / (duration / 16);
+
+    const timer = setInterval(() => {
+      start += increment;
+      if (start >= end) {
+        setCount(end);
+        clearInterval(timer);
+      } else {
+        setCount(Math.floor(start));
+      }
+    }, 16);
+
+    return () => clearInterval(timer);
+  }, [targetValue]);
+
+  return <span>{count}</span>;
+};
 
 function TaskListNumber() {
-  const currentUser =Store((state)=>state.user)
-    return (
-        <div className='flex mt-10 justify-between gap-7 screen flex-wrap md:flex-nowrap'>
-            <div className='rounded-xl w-[40%] py-6 px-9 bg-blue-400 h-40 flex flex-col items-center justify-center'>
-                <h2 className='text-3xl font-bold mb-2 border-2 p-1'>{currentUser.taskCounts?.newTask}</h2>
-                <h3 className='text-xl font-medium'>New Task 🆕</h3>
-            </div>
-            <div className='rounded-xl w-[40%] py-6 px-9 bg-green-400 h-40 flex flex-col items-center justify-center'>
-                <h2 className='text-3xl font-bold mb-2 border-2 p-1 '>{currentUser.taskCounts?.completed}</h2>
-                <h3 className='text-xl font-medium'>Completed Task ✔</h3>
-            </div>
-            <div className='rounded-xl w-[40%] py-6 px-9 bg-white/95  h-40 flex flex-col items-center justify-center'>
-                <h2 className='text-3xl text-black font-bold mb-2 border-2 p-1'>{currentUser.taskCounts?.active}</h2>
-                <h3 className='text-xl text-black font-medium'>Accepted Task 👍</h3>
-            </div>
-            <div className='rounded-xl w-[40%] py-6 px-9 bg-red-600 h-40 flex flex-col items-center justify-center'>
-                <h2 className='text-3xl font-bold mb-2 border-2 p-1'>{currentUser.taskCounts?.failed}</h2>
-                <h3 className='text-xl font-medium'>Failed Task ❌</h3>
-            </div>
+  const currentUser = Store((state) => state.user);
+
+  const stats = [
+    {
+      label: "New Tasks",
+      count: currentUser?.taskCounts?.newTask || 0,
+      color: "bg-blue-600",
+      icon: "✨",
+    },
+    {
+      label: "Completed",
+      count: currentUser?.taskCounts?.completed || 0,
+      color: "bg-emerald-600",
+      icon: "🏆",
+    },
+    {
+      label: "Accepted",
+      count: currentUser?.taskCounts?.active || 0,
+      color: "bg-amber-500",
+      icon: "⚡",
+    },
+    {
+      label: "Failed",
+      count: currentUser?.taskCounts?.failed || 0,
+      color: "bg-rose-600",
+      icon: "⚠️",
+    },
+  ];
+
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-10 px-4 md:px-0 ">
+      {stats.map((stat) => (
+        <div
+          key={stat.label}
+          className={`${stat.color} relative overflow-hidden group rounded-2xl p-6 h-36 flex flex-col justify-center transition-all duration-300 hover:-translate-y-2 shadow-lg hover:shadow-2xl border border-white/10`}
+        >
+          <span className="absolute -right-2  text-8xl opacity-10 grayscale group-hover:grayscale-0 group-hover:opacity-20 transition-all duration-500 pointer-events-none">
+            {stat.icon}
+          </span>
+
+          <div className="relative z-10">
+            <h2 className="text-4xl font-black text-white tracking-tight">
+              <Counter targetValue={stat.count} />
+            </h2>
+            <p className="text-white/90 font-bold uppercase tracking-[0.15em] text-[10px] md:text-xs mt-1">
+              {stat.label}
+            </p>
+          </div>
         </div>
-    )
+      ))}
+    </div>
+  );
 }
 
-export default TaskListNumber
+export default TaskListNumber;

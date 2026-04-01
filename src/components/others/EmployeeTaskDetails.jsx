@@ -1,32 +1,76 @@
-import {Store } from '../../Context/Context';
+import { useAdminEmployees } from "../../Context/Context";
+
+const statCols = [
+  { key: "newTask",   label: "New",      icon: "✨", badge: "bg-blue-500/20 text-blue-300 ring-blue-500/30"    },
+  { key: "active",    label: "Active",   icon: "⚡", badge: "bg-amber-500/20 text-amber-300 ring-amber-500/30" },
+  { key: "completed", label: "Done",     icon: "🏆", badge: "bg-emerald-500/20 text-emerald-300 ring-emerald-500/30" },
+  { key: "failed",    label: "Failed",   icon: "⚠️", badge: "bg-rose-500/20 text-rose-300 ring-rose-500/30"   },
+];
 
 function EmployeeTaskDetails() {
-  const employeesData =Store((state) => state.employeesData);
+  const employeesData = useAdminEmployees();
 
+  if (employeesData.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center py-14 text-center select-none">
+        <div className="text-6xl mb-4 opacity-50">👥</div>
+        <p className="text-white/50 font-bold text-base">No employees yet</p>
+        <p className="text-white/30 text-sm mt-1">Click "Add New Employee" to get started</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="p-5 rounded mt-5 h-48 overflow-auto bg-white shadow">
-      <div className="bg-red-500 mb-2 py-3 px-6 flex justify-between items-center rounded font-semibold text-white">
-        <h2 className="w-19 text-center font-bold">S.no</h2>
-        <h2 className="w-1/5">Employee Name</h2>
-        <h5 className="w-1/5 text-center">Active Task</h5>
-        <h5 className="w-1/5 text-center ">New Task</h5>
-        <h5 className="w-1/5 text-center">Completed Task</h5>
-        <h5 className="w-1/5 text-center ">Failed Task</h5>
+    <div className="w-full overflow-x-auto">
+   
+      <div className="min-w-[680px] flex items-center gap-4 px-5 py-2.5 mb-3 rounded-xl bg-white/5 border border-white/10 text-white/40 text-[11px] font-bold uppercase tracking-widest">
+        
+        <span className="flex-1">Employee</span>
+        {statCols.map((col) => (
+          <span key={col.key} className="w-20 shrink-0 text-center">
+            {col.icon} {col.label}
+          </span>
+        ))}
       </div>
-      {employeesData.map((employee, idx) => (
-        <div
-          key={idx}
-          className="bg-blue-100 hover:bg-red-300 transition mb-2 py-2 px-6 flex justify-between items-center rounded"
-        > 
-          <h5 className="text-lg w-19 text-center font-bold">{idx + 1}</h5>
-          <h2 className="text-lg w-1/5 font-medium">{employee.firstName}</h2>
-          <h5 className="text-lg w-1/5 text-center font-medium">{employee.taskCounts.active}</h5>
-          <h5 className="text-lg w-1/5 text-center font-medium">{employee.taskCounts.newTask}</h5>
-          <h5 className="text-lg w-1/5 text-center font-medium">{employee.taskCounts.completed}</h5>
-          <h5 className="text-lg w-1/5 text-center font-medium text-red-600">{employee.taskCounts.failed}</h5>
-        </div>
-      ))}
+
+      <div className="min-w-[680px] space-y-2">
+        {employeesData.map((employee) => {
+          const tc = employee.taskCounts || {};
+       
+         
+
+          return (
+            <div
+              key={employee.id}
+              className="flex items-center gap-4 px-5 py-3.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.35] border border-white/[0.06] hover:border-white/20 transition-all duration-200 group"
+            >
+             
+          
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="text-white font-semibold text-sm truncate">
+                    {employee.firstName}
+                  </span>
+                  <span className="text-white/25 text-[11px] font-mono">Id:{employee.id}</span>
+                </div>
+                
+               
+              </div>
+
+          
+              {statCols.map((col) => (
+                <div key={col.key} className="w-20 shrink-0 flex justify-center">
+                  <span
+                    className={`inline-flex items-center justify-center w-9 h-7 rounded-lg text-sm font-bold ring-1 ${col.badge}`}
+                  >
+                    {tc[col.key] || 0}
+                  </span>
+                </div>
+              ))}
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }

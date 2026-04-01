@@ -3,7 +3,7 @@ import {Store } from "../../Context/Context";
 function NewTask({ task }) {
   const acceptTask =Store((state) => state.acceptTask);
   const clickFunction = () => {
-    acceptTask(task);
+    acceptTask(task.taskId);
   };
   return (
     <div className="flex flex-col shrink-0 h-[220px] w-[340px] bg-white/95 rounded-3xl p-7 border border-blue-100 ">
@@ -15,7 +15,7 @@ function NewTask({ task }) {
           {task.taskDate}
         </span>
       </div>
-      <h2 className="text-2xl font-bold text-blue-700 mb-2">
+      <h2 className="text-xl font-bold text-blue-700 mb-2">
         {task.taskTitle}
       </h2>
       <p className="text-gray-700 text-sm ">{task.taskDescription}</p>

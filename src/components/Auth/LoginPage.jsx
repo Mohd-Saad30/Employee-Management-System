@@ -22,8 +22,8 @@ export const LoginPage = () => {
   const submitHandler = (e) => {
     e.preventDefault();
     setError(null);
-    const successful_login = login(email, password, role);
-    if (!successful_login) {
+    const ok = login(email, password, role);
+    if (!ok) {
       setError("Invalid credentials. Please try again.");
     } else {
       setEmail("");
@@ -31,17 +31,25 @@ export const LoginPage = () => {
     }
   };
 
- 
   const isAdmin = role === "admin";
 
-  
+  const demoCreds = isAdmin
+    ? { email: "admin@example.com", password: "123" }
+    : { email: "employee1@example.com", password: "123" };
+
+  const demoLoginHandler = () => {
+    setError(null);
+    const ok = login(demoCreds.email, demoCreds.password, role);
+    if (!ok) setError("Demo login failed. Please try again.");
+  };
+
   const theme = {
     bgGradient: isAdmin
       ? "from-emerald-900/40 via-gray-900 to-gray-900"
       : "from-blue-900/40 via-gray-900 to-gray-900",
     buttonColor: isAdmin
       ? "bg-emerald-600 hover:bg-emerald-700 shadow-emerald-500/20"
-      : "bg-emerald-500 hover:bg-emerald-600 shadow-emerald-500/20", 
+      : "bg-emerald-500 hover:bg-emerald-600 shadow-emerald-500/20",
     focusRing: isAdmin
       ? "focus:border-emerald-500 focus:ring-emerald-500/10"
       : "focus:border-emerald-500 focus:ring-emerald-500/10",
@@ -83,8 +91,8 @@ export const LoginPage = () => {
               onChange={(e) => setEmail(e.target.value)}
               type="email"
               required
-              placeholder="name@company.com"
-              className={`w-full bg-gray-800/50 border border-gray-600 text-white text-sm rounded-xl block p-4 placeholder-gray-500 outline-none transition-all duration-200 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/50`}
+              placeholder={isAdmin ? " Admin email" : "Employee Email"}
+              className={`w-full bg-gray-800/50 border border-gray-600 text-white text-sm rounded-xl block p-4 placeholder-gray-700 outline-none transition-all duration-200 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/50`}
             />
           </div>
 
@@ -98,7 +106,7 @@ export const LoginPage = () => {
               type="password"
               required
               placeholder="••••••••"
-              className={`w-full bg-gray-800/50 border border-gray-600 text-white text-sm rounded-xl block p-4 placeholder-gray-500 outline-none transition-all duration-200 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/50`}
+              className={`w-full bg-gray-800/50 border border-gray-700 text-white text-sm rounded-xl block p-4 placeholder-gray-700 outline-none transition-all duration-200 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/50`}
             />
           </div>
 
@@ -115,6 +123,29 @@ export const LoginPage = () => {
             Sign In
           </button>
         </form>
+
+        <div className="mt-5">
+          <div className="relative flex items-center gap-3 mb-4">
+            <div className="flex-1 h-px bg-gray-700/60" />
+            <span className="text-gray-500 text-xs font-semibold uppercase tracking-widest shrink-0">
+              or
+            </span>
+            <div className="flex-1 h-px bg-gray-700/60" />
+          </div>
+          <button
+            type="button"
+            onClick={demoLoginHandler}
+            className="group w-full relative flex items-center justify-center gap-2.5 px-5 py-3.5 rounded-xl border border-dashed border-yellow-500/40 bg-yellow-500/5 hover:bg-yellow-500/10 hover:border-yellow-400/60 transition-all duration-200 active:scale-[0.98]"
+          >
+            <span className="text-lg">⚡</span>
+            <span className="text-yellow-300 font-bold text-sm tracking-wide">
+              Try Demo Access
+            </span>
+          </button>
+          <p className="text-center text-gray-600 text-[11px] mt-2">
+            No account needed — explore with demo data
+          </p>
+        </div>
 
         {!isAdmin && (
           <div className="mt-8 pt-6 border-t border-gray-700/50 text-center">

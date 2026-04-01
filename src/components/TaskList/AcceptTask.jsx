@@ -14,14 +14,14 @@ function AcceptTask({ task }) {
           {task.taskDate}
         </span>
       </div>
-      <h2 className="text-2xl font-bold text-blue-700 mb-2">
+      <h2 className="text-xl font-bold text-blue-700 mb-2">
         {task.taskTitle}
       </h2>
       <p className="text-gray-700 text-sm">{task.taskDescription}</p>
       <div className="flex justify-between mt-2 ">
         <button
           onClick={() => {
-            completedTask(task);
+            completedTask(task.taskId);
           }}
           className="bg-green-400 hover:bg-green-600 text-white font-semibold  rounded-lg p-1 "
         >
@@ -29,7 +29,7 @@ function AcceptTask({ task }) {
         </button>
         <button
           onClick={() => {
-            FailedTask(task);
+            FailedTask(task.taskId);
           }}
           className="bg-red-400 hover:bg-red-600 text-white font-semibold  rounded-lg p-1"
         >

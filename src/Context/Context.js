@@ -1,8 +1,10 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-const employeesData = [
+
+const initialEmployeesData = [
   {
     id: 1,
+    adminId: 101,
     firstName: "Saad",
     email: "employee1@example.com",
     password: "123",
@@ -14,101 +16,106 @@ const employeesData = [
     },
     tasks: [
       {
+        taskId: 1001,
         active: false,
         newTask: true,
         completed: false,
         failed: false,
-        taskTitle: "Update website(DEMO DATA)",
+        taskTitle: "Update website",
         taskDescription: "Revamp the homepage design",
         taskDate: "2024-10-12",
         category: "Design",
       },
       {
+        taskId: 1002,
         active: false,
         newTask: false,
         completed: true,
         failed: false,
-        taskTitle: "Client meeting(DEMO DATA)",
+        taskTitle: "Client meeting",
         taskDescription: "Discuss project requirements",
         taskDate: "2024-10-10",
         category: "Meeting",
       },
       {
+        taskId: 1003,
         active: true,
         newTask: false,
         completed: false,
         failed: false,
-        taskTitle: "Fix bugs(DEMO DATA)",
+        taskTitle: "Fix bugs",
         taskDescription: "Resolve bugs reported in issue tracker",
         taskDate: "2024-10-14",
         category: "Development",
       },
     ],
   },
- 
 ];
 
-const adminData = [
-  {
-    id: 5,
-    email: "admin@example.com",
-    password: "123",
-  },
+const initialAdminData = [
+  { id: 101, email: "admin@example.com", password: "123" },
+  { id: 102, email: "My@example.com", password: "123" },
 ];
+
+const syncUser = (state, newEmployeesData) => {
+  if (!state.user || state.user.role === "admin") return state.user;
+  const fresh = newEmployeesData.find((e) => e.id === state.user.id);
+  if (!fresh) return state.user;
+  return { ...fresh, role: "employee" };
+};
 
 export const Store = create(
   persist(
     (set, get) => ({
-      employeesData: employeesData,
-      adminData: adminData,
+      employeesData: initialEmployeesData,
+      adminData: initialAdminData,
       user: null,
+
       login: (email, password, role) => {
         const { adminData, employeesData } = get();
-        if (role === "admin")
-        {
-          const adminUser = adminData.find(
-            (admin) => admin.email == email && admin.password == password
+
+        if (role === "admin") {
+          const found = adminData.find(
+            (a) => a.email === email && a.password === password,
           );
-          if (adminUser) {
-            set({ user: { role: "admin", ...adminUser } });
+          if (found) {
+            set({ user: { role: "admin", ...found } });
             return true;
           }
-        } 
-        else if (role === "employee")
-        {
-          const employeeUser = employeesData.find(
-            (employee) =>
-              employee.email == email && employee.password == password
+        } else if (role === "employee") {
+          const found = employeesData.find(
+            (e) => e.email === email && e.password === password,
           );
-          if (employeeUser) {
-            set({ user: { role: "employee", ...employeeUser } });
+          if (found) {
+            set({ user: { role: "employee", ...found } });
             return true;
           }
         }
         return false;
       },
+
       logout: () => set({ user: null }),
 
       addEmployee: (employeeName, employeeEmail, employeePassword) => {
-        const { employeesData } = get();
-        const existName = employeesData.find(
-          (employee) =>
-            employee.firstName.toLowerCase() === employeeName.toLowerCase()
+        const { employeesData, user } = get();
+
+        const nameTaken = employeesData.find(
+          (e) => e.firstName.toLowerCase() === employeeName.toLowerCase(),
         );
-        if (existName) {
+        if (nameTaken) {
           return {
             success: false,
-            message: `An employee named '${employeeName}' already exists.`,
+            message: `Employee name '${employeeName}' already exists.`,
           };
         }
-        const existEmail = employeesData.find(
-          (employee) =>
-            employee.email.toLowerCase() === employeeEmail.toLowerCase()
+
+        const emailTaken = employeesData.find(
+          (e) => e.email.toLowerCase() === employeeEmail.toLowerCase(),
         );
-        if (existEmail) {
+        if (emailTaken) {
           return {
             success: false,
-            message: `An employee email '${employeeEmail}' already exists.`,
+            message: `Email '${employeeEmail}' is already in use.`,
           };
         }
 
@@ -116,7 +123,8 @@ export const Store = create(
           employeesData: [
             ...state.employeesData,
             {
-              id: Date.now(),
+              id: Date.now() % 1000000,
+              adminId: user.id,
               firstName: employeeName,
               email: employeeEmail,
               password: employeePassword,
@@ -128,140 +136,116 @@ export const Store = create(
 
         return {
           success: true,
-          message: `Employee '${employeeName}' was added successfully!`,
+          message: `Employee '${employeeName}' added successfully!`,
         };
       },
 
-      acceptTask: (task) =>
-        set((state) => ({
-          user: {
-            ...state.user,
-            taskCounts: {
-              ...state.user.taskCounts,
-              newTask: state.user.taskCounts.newTask - 1,
-              active: state.user.taskCounts.active + 1,
-            },
-            tasks: state.user.tasks.map((t) =>
-              t.taskTitle === task.taskTitle
-                ? { ...t, active: true, newTask: false }
-                : t
-            ),
-          },
-
-          employeesData: state.employeesData.map((employee) =>
-            employee.id === state.user.id
-              ? {
-                  ...state.user,
-                  taskCounts: {
-                    ...state.user.taskCounts,
-                    newTask: state.user.taskCounts.newTask - 1,
-                    active: state.user.taskCounts.active + 1,
-                  },
-                  tasks: state.user.tasks.map((t) =>
-                    t.taskTitle === task.taskTitle
-                      ? { ...t, active: true, newTask: false }
-                      : t
-                  ),
-                }
-              : employee
-          ),
-        })),
-      completedTask: (task) =>
-        set((state) => ({
-          user: {
-            ...state.user,
-            taskCounts: {
-              ...state.user.taskCounts,
-              completed: state.user.taskCounts.completed + 1,
-              active: state.user.taskCounts.active - 1,
-            },
-            tasks: state.user.tasks.map((t) =>
-              t.taskTitle === task.taskTitle
-                ? { ...t, active: false, completed: true }
-                : t
-            ),
-          },
-
-          employeesData: state.employeesData.map((employee) =>
-            employee.id === state.user.id
-              ? {
-                  ...state.user,
-                  taskCounts: {
-                    ...state.user.taskCounts,
-                    completed: state.user.taskCounts.completed + 1,
-                    active: state.user.taskCounts.active - 1,
-                  },
-                  tasks: state.user.tasks.map((t) =>
-                    t.taskTitle === task.taskTitle
-                      ? { ...t, active: false, completed: true }
-                      : t
-                  ),
-                }
-              : employee
-          ),
-        })),
-      failedTask: (task) =>
-        set((state) => ({
-          user: {
-            ...state.user,
-            taskCounts: {
-              ...state.user.taskCounts,
-              failed: state.user.taskCounts.failed + 1,
-              active: state.user.taskCounts.active - 1,
-            },
-            tasks: state.user.tasks.map((t) =>
-              t.taskTitle === task.taskTitle
-                ? { ...t, active: false, failed: true }
-                : t
-            ),
-          },
-          employeesData: state.employeesData.map((employee) =>
-            employee.id === state.user.id
-              ? {
-                  ...state.user,
-                  taskCounts: {
-                    ...state.user.taskCounts,
-                    failed: state.user.taskCounts.failed + 1,
-                    active: state.user.taskCounts.active - 1,
-                  },
-                  tasks: state.user.tasks.map((t) =>
-                    t.taskTitle === task.taskTitle
-                      ? { ...t, active: false, failed: true }
-                      : t
-                  ),
-                }
-              : employee
-          ),
-        })),
-
-      addTask: (employeeName, Task) =>
+      addTask: (employeeId, taskData) =>
         set((state) => {
-          let updatedUser = state.user;
+          const newTask = { ...taskData, taskId: Date.now() };
+
           const newEmployeesData = state.employeesData.map((employee) => {
-            if (employee.firstName === employeeName) {
-              const updatedEmployee = {
+            if (employee.id === employeeId) {
+              return {
                 ...employee,
                 taskCounts: {
                   ...employee.taskCounts,
                   newTask: employee.taskCounts.newTask + 1,
                 },
-                tasks: [...employee.tasks, Task],
+                tasks: [...employee.tasks, newTask],
               };
-              if (state.user && state.user.id === employee.id) {
-                updatedUser = updatedEmployee;
-              }
-              return updatedEmployee;
             }
             return employee;
           });
+
           return {
             employeesData: newEmployeesData,
-            user: updatedUser,
+            user: syncUser(state, newEmployeesData),
+          };
+        }),
+
+      acceptTask: (taskId) =>
+        set((state) => {
+          const newEmployeesData = state.employeesData.map((employee) => {
+            if (employee.id !== state.user?.id) return employee;
+            return {
+              ...employee,
+              taskCounts: {
+                ...employee.taskCounts,
+                newTask: Math.max(0, employee.taskCounts.newTask - 1),
+                active: employee.taskCounts.active + 1,
+              },
+              tasks: employee.tasks.map((t) =>
+                t.taskId === taskId
+                  ? { ...t, newTask: false, active: true }
+                  : t,
+              ),
+            };
+          });
+          return {
+            employeesData: newEmployeesData,
+            user: syncUser(state, newEmployeesData),
+          };
+        }),
+
+      completedTask: (taskId) =>
+        set((state) => {
+          const newEmployeesData = state.employeesData.map((employee) => {
+            if (employee.id !== state.user?.id) return employee;
+            return {
+              ...employee,
+              taskCounts: {
+                ...employee.taskCounts,
+                active: Math.max(0, employee.taskCounts.active - 1),
+                completed: employee.taskCounts.completed + 1,
+              },
+              tasks: employee.tasks.map((t) =>
+                t.taskId === taskId
+                  ? { ...t, active: false, completed: true }
+                  : t,
+              ),
+            };
+          });
+          return {
+            employeesData: newEmployeesData,
+            user: syncUser(state, newEmployeesData),
+          };
+        }),
+
+      failedTask: (taskId) =>
+        set((state) => {
+          const newEmployeesData = state.employeesData.map((employee) => {
+            if (employee.id !== state.user?.id) return employee;
+            return {
+              ...employee,
+              taskCounts: {
+                ...employee.taskCounts,
+                active: Math.max(0, employee.taskCounts.active - 1),
+                failed: employee.taskCounts.failed + 1,
+              },
+              tasks: employee.tasks.map((t) =>
+                t.taskId === taskId ? { ...t, active: false, failed: true } : t,
+              ),
+            };
+          });
+          return {
+            employeesData: newEmployeesData,
+            user: syncUser(state, newEmployeesData),
           };
         }),
     }),
     {
       name: "auth-storage",
-    }
-  )
+    },
+  ),
 );
+
+export const useAdminEmployees = () => {
+  const employeesData = Store((state) => state.employeesData);
+  const user = Store((state) => state.user);
+
+  if (user && user.role === "admin") {
+    return employeesData.filter((e) => e.adminId === user.id);
+  }
+  return [];
+};
